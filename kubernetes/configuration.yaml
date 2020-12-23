@@ -1,7 +1,19 @@
-kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
+apiVersion: apps/v1 ## Kubernetes API Version
+kind: Deployment ## Type of resource
 metadata:
-  name: fast
-provisioner: kubernetes.io/azure-disk
-parameters:
-  type: Managed
+  labels:
+    app: neo4j-db ## Labels given by user
+  name: neo4j-db ## Name given to the <kind> resource
+spec:
+  replicas: 1
+  selector:
+    matchLabels: ## Should be same as spec.template.labels
+      app: neo4j-db
+  template:
+    metadata:
+      labels: ## Should be same as spec.selector.matchLabels
+        app: neo4j-db 
+    spec:
+      containers:
+      - image: neo4j:4.2.1 ## Image Name
+        name: neo4j ## Name of container
